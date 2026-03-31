@@ -1,5 +1,5 @@
-import 'package:crud_local_database_app/models/note.dart';
-import 'package:crud_local_database_app/models/note_database.dart';
+import '../models/note.dart';
+import '../models/note_database.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';

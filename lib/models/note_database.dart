@@ -1,4 +1,4 @@
-import 'package:crud_local_database_app/models/note.dart';
+import 'note.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';

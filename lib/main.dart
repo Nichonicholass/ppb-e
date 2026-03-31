@@ -1,9 +1,19 @@
-// main.dart
+import 'models/note_database.dart';
+import 'pages/notes_page.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-void main() async {
 
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NoteDatabase.initialize();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => NoteDatabase(),
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: NotesPage()
+      home: const NotesPage()
     );
   }
 }

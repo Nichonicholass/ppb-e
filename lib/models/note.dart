@@ -1,7 +1,8 @@
-// models/note.dart
+import 'dart:typed_data';
+
 import 'package:isar/isar.dart';
 
-// this line is needed to generate file
+// this line is needed ot generate file
 // then run dart run build_runner build
 part 'note.g.dart';
 
@@ -9,4 +10,6 @@ part 'note.g.dart';
 class Note {
   Id id = Isar.autoIncrement;
   late String text;
+
+  late String imagePath; // stores path to the image file
 }
