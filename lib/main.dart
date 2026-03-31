@@ -1,31 +1,20 @@
+// main.dart
 import 'package:flutter/material.dart';
 
-void main() => runApp(MaterialApp(
-  home: Scaffold(
-    appBar: AppBar(
-      title: Text('my first app'),
-      centerTitle: true,
-      backgroundColor: Colors.red[600]
-    ),
-    body: Center(
-      child: Text(
-        'hello, ninjas!',
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 2.0,
-          color: Colors.grey[600],
-          fontFamily: 'IndieFlower',
-        ),
-      ),
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        // Bisa dikosongkan dulu seperti ini, 
-        // atau diisi print('Tombol ditekan!');
-      },
-      backgroundColor: Colors.red[600],
-      child: Text('click'),
-    ),
-  ),
-));
+void main() async {
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: NotesPage()
+    );
+  }
+}
