@@ -1,61 +1,83 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'note.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class NoteDatabase extends ChangeNotifier {
-  static late Isar isar;
+  static const String _notesKey = 'notes';
+  static late SharedPreferences _prefs;
 
-  // INIT
   static Future<void> initialize() async {
-    if (Platform.isAndroid) {
-      // Check if it's Android
-      final dir = await getApplicationDocumentsDirectory();
-      isar = await Isar.open([NoteSchema], directory: dir.path);
-    } else {
-      // Handle other platforms or provide a default directory
-      final dir = getTemporaryDirectory(); // Example for other platforms
-      isar = await Isar.open([NoteSchema], directory: (await dir).path);
-    }
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  // list
   final List<Note> currentNotes = [];
 
-  // create
   Future<void> addNote(String textFromUser) async {
-    // create a new object
-    final newNote = Note()..text = textFromUser;
+    final trimmed = textFromUser.trim();
+    if (trimmed.isEmpty) return;
 
-    // save to db
-    await isar.writeTxn(() => isar.notes.put(newNote));
+    final nextId = currentNotes.isEmpty
+        ? 1
+        : currentNotes.map((note) => note.id).reduce((a, b) => a > b ? a : b) +
+              1;
 
-    // re-read from db
-    fetchNotes();
-  }
+    final newNote = Note(id: nextId, text: trimmed);
+    currentNotes.add(newNote);
 
-  // read
-  Future<void> fetchNotes() async {
-    List<Note> fetchedNotes = await isar.notes.where().findAll();
-    currentNotes.clear();
-    currentNotes.addAll(fetchedNotes);
+    await _persistNotes();
     notifyListeners();
   }
 
-  // update
-  Future<void> updateNote(int id, String newText) async {
-    final existingNote = await isar.notes.get(id);
-    if (existingNote != null) {
-      existingNote.text = newText;
-      await isar.writeTxn(() => isar.notes.put(existingNote));
-      await fetchNotes();
+  Future<void> fetchNotes() async {
+    final rawJson = _prefs.getString(_notesKey);
+    if (rawJson == null || rawJson.isEmpty) {
+      currentNotes.clear();
+      notifyListeners();
+      return;
     }
+
+    final decoded = jsonDecode(rawJson) as List<dynamic>;
+    final loadedNotes = decoded
+        .map((item) => Note.fromJson(item as Map<String, dynamic>))
+        .toList();
+
+    currentNotes
+      ..clear()
+      ..addAll(loadedNotes);
+    notifyListeners();
   }
 
-  // delete
+  Future<void> updateNote(int id, String newText) async {
+    final trimmed = newText.trim();
+    if (trimmed.isEmpty) return;
+
+    final index = currentNotes.indexWhere((note) => note.id == id);
+    if (index == -1) return;
+
+    currentNotes[index] = currentNotes[index].copyWith(text: trimmed);
+    await _persistNotes();
+    notifyListeners();
+  }
+
   Future<void> deleteNote(int id) async {
-    await isar.writeTxn(() => isar.notes.delete(id));
-    await fetchNotes();
+    currentNotes.removeWhere((note) => note.id == id);
+    await _persistNotes();
+    notifyListeners();
+  }
+
+  Future<void> clearAllNotes() async {
+    currentNotes.clear();
+    await _prefs.remove(_notesKey);
+    notifyListeners();
+  }
+
+  Future<void> _persistNotes() async {
+    final encoded = jsonEncode(
+      currentNotes.map((note) => note.toJson()).toList(),
+    );
+    await _prefs.setString(_notesKey, encoded);
   }
 }

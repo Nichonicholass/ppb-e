@@ -1,13 +1,18 @@
-// models/note.dart
-import 'package:isar/isar.dart';
-
-// this line is needed to generate file
-// then run dart run build_runner build
-part 'note.g.dart';
-
-@Collection()
 class Note {
-  Id id = Isar.autoIncrement;
-  late String text;
-  late String imagePath;
+  final int id;
+  final String text;
+
+  const Note({required this.id, required this.text});
+
+  Note copyWith({int? id, String? text}) {
+    return Note(id: id ?? this.id, text: text ?? this.text);
+  }
+
+  factory Note.fromJson(Map<String, dynamic> json) {
+    return Note(id: json['id'] as int, text: (json['text'] as String?) ?? '');
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'text': text};
+  }
 }
