@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "128329347435",
+    "project_id": "testing-ppb-a0260",
+    "storage_bucket": "testing-ppb-a0260.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128329347435:android:86d7680f26c76691c21c2e",
+        "android_client_info": {
+          "package_name": "com.example.tugas_pertama"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5wa4tP8dwGB34HMaV1vr4sFa20AuDGSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128329347435:android:d97340369b562827c21c2e",
+        "android_client_info": {
+          "package_name": "com.weynard02.crud_local_database_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5wa4tP8dwGB34HMaV1vr4sFa20AuDGSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
