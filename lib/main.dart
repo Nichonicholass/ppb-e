@@ -1,31 +1,29 @@
+import 'models/note_database.dart';
+import 'pages/notes_page.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MaterialApp(
-  home: Scaffold(
-    appBar: AppBar(
-      title: Text('my first app'),
-      centerTitle: true,
-      backgroundColor: Colors.red[600]
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NoteDatabase.initialize();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => NoteDatabase(),
+      child: const MyApp(),
     ),
-    body: Center(
-      child: Text(
-        'hello, ninjas!',
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 2.0,
-          color: Colors.grey[600],
-          fontFamily: 'IndieFlower',
-        ),
-      ),
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        // Bisa dikosongkan dulu seperti ini, 
-        // atau diisi print('Tombol ditekan!');
-      },
-      backgroundColor: Colors.red[600],
-      child: Text('click'),
-    ),
-  ),
-));
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: NotesPage(),
+    );
+  }
+}
